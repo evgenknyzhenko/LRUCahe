@@ -1,4 +1,6 @@
-
+import java.util.Arrays;
+import java.util.Optional;
+import java.util.stream.Stream;
 
 /**
  * Created by Евгений on 22.05.2018.
@@ -13,6 +15,9 @@ public class LRUCache {
 
 
     public void put(int key, int valuee) {
+        /*Entry a = Stream.of(entries)
+                .filter((entry) -> entry != null && entry.getKey() == key)
+                .map(c -> c.setValuee(4)).findFirst();*/
 
         for (int i = 0; i < entries.length; i++) {
             if (entries[i] != null && entries[i].getKey() == key) {
@@ -41,6 +46,12 @@ public class LRUCache {
 
         int resultValue = -1;
 
+
+        /*resultValue = (Stream.of(entries)
+                .filter(c -> c != null && c.getKey() == key)
+                .findFirst()).get().getValuee();*/
+
+
         for (int i = 0; i < entries.length; i++) {
 
             if (entries[i] != null && entries[i].getKey() == key) {
@@ -53,6 +64,7 @@ public class LRUCache {
 
 
     private void moveElements(int position) {
+
         Entry actualElement = entries[position];
         for (int i = position; i > 0; i--) {
             entries[i] = entries[i - 1];
@@ -62,3 +74,14 @@ public class LRUCache {
 
 
 }
+
+
+
+
+
+
+
+
+
+
+
