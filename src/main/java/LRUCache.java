@@ -15,9 +15,6 @@ public class LRUCache {
 
 
     public void put(int key, int valuee) {
-        /*Entry a = Stream.of(entries)
-                .filter((entry) -> entry != null && entry.getKey() == key)
-                .map(c -> c.setValuee(4)).findFirst();*/
 
         for (int i = 0; i < entries.length; i++) {
             if (entries[i] != null && entries[i].getKey() == key) {
@@ -40,17 +37,9 @@ public class LRUCache {
     }
 
 
-
-
     public int get(int key) {
 
         int resultValue = -1;
-
-
-        /*resultValue = (Stream.of(entries)
-                .filter(c -> c != null && c.getKey() == key)
-                .findFirst()).get().getValuee();*/
-
 
         for (int i = 0; i < entries.length; i++) {
 

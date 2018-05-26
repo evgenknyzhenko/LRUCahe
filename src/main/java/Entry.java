@@ -4,7 +4,6 @@
 public class Entry {
     private int key;
     private int valuee;
-    private int position;
 
     public Entry(int key, int valuee) {
         this.key = key;
@@ -24,7 +23,4 @@ public class Entry {
         this.valuee = valuee;
     }
 
-    public int getPosition() {
-        return position;
-    }
 }
