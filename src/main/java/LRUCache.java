@@ -8,22 +8,22 @@ public class LRUCache {
     private Entry first;
     private Entry element;
 
-
     public static void main(String[] args) {
         LRUCache cache = new LRUCache(5);
         cache.put(11, 110);
         cache.put(12, 120);
-        cache.put(13, 130);
+        cache.put(11, 130);
         cache.put(14, 140);
-        cache.put(15, 150);
+        cache.put(11, 150);
         cache.put(16, 160);
         System.out.println(cache.get(14));
         System.out.println(cache.get(13));
-        cache.put(12, 170);
+        cache.put(19, 170);
         cache.put(12, 180);
         cache.put(19, 190);
 
         cache.printAllElements();
+        System.out.println(cache.getSize());
     }
 
 
@@ -37,7 +37,7 @@ public class LRUCache {
 
         for (int i = 0; i < size; i++) {
             if (element != null) {
-                System.out.println(element.key + " " + element.value);
+                System.out.println("Key: " + element.key + ", Value: " + element.value);
                 element = element.nextElement;
             }
         }
@@ -117,10 +117,14 @@ public class LRUCache {
 
 
     private void moveToFirstPositionLastElement(Entry element) {
-        element.previousElement.nextElement = null;
-        element.previousElement = null;
-        element.nextElement = first;
-        first = element;
+        if (size != 1) {
+            element.previousElement.nextElement = null;
+            element.previousElement = null;
+            element.nextElement = first;
+            first.previousElement = element;
+            first = element;
+        }
+
 
     }
 
@@ -137,7 +141,6 @@ public class LRUCache {
             element = element.nextElement;
         }
     }
-
 
 
     private class Entry {
