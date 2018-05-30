@@ -1,76 +1,156 @@
-import java.util.Arrays;
-import java.util.Optional;
-import java.util.stream.Stream;
-
 /**
  * Created by Евгений on 22.05.2018.
  */
 
 public class LRUCache {
-    private Entry[] entries;
+    private int capacity;
+    private int size;
+    private Entry first;
+    private Entry element;
 
-    public LRUCache() {
-        entries = new Entry[5];
+
+    public static void main(String[] args) {
+        LRUCache cache = new LRUCache(5);
+        cache.put(11, 110);
+        cache.put(12, 120);
+        cache.put(13, 130);
+        cache.put(14, 140);
+        cache.put(15, 150);
+        cache.put(16, 160);
+        System.out.println(cache.get(14));
+        System.out.println(cache.get(13));
+        cache.put(12, 170);
+        cache.put(12, 180);
+        cache.put(19, 190);
+
+        cache.printAllElements();
     }
 
 
-    public void put(int key, int valuee) {
+    public LRUCache(int capacity) {
+        this.capacity = capacity;
+    }
 
-        for (int i = 0; i < entries.length; i++) {
-            if (entries[i] != null && entries[i].getKey() == key) {
-                entries[i].setValuee(valuee);
-                moveElements(i);
-                return;
+
+    public void printAllElements() {
+        element = first;
+
+        for (int i = 0; i < size; i++) {
+            if (element != null) {
+                System.out.println(element.key + " " + element.value);
+                element = element.nextElement;
             }
         }
+    }
 
-        for (int i = 0; i < entries.length; i++) {
-            if (entries[i] == null) {
-                entries[i] = new Entry(key, valuee);
-                moveElements(i);
-                return;
-            }
-        }
 
-        moveElements(4);
-        entries[0] = new Entry(key, valuee);
+    public int getSize() {
+        return size;
     }
 
 
     public int get(int key) {
+        int result = -1;
+        element = first;
 
-        int resultValue = -1;
-
-        for (int i = 0; i < entries.length; i++) {
-
-            if (entries[i] != null && entries[i].getKey() == key) {
-                resultValue = entries[i].getValuee();
-                moveElements(i);
+        for (int i = 0; i < size; i++) {
+            if (element.key == key) {
+                result = element.value;
+                moveToFirstPosition(element);
+                return result;
+            } else {
+                element = element.nextElement;
             }
         }
-        return resultValue;
+
+        return result;
     }
 
 
-    private void moveElements(int position) {
-
-        Entry actualElement = entries[position];
-        for (int i = position; i > 0; i--) {
-            entries[i] = entries[i - 1];
+    public void put(int key, int value) {
+        if (first == null) {
+            first = new Entry(key, value, null, null);
+            size = 1;
+            return;
         }
-        entries[0] = actualElement;
+
+        element = first;
+        for (int i = 0; i < size; i++) {
+            if (element.key == key) {
+                element.value = value;
+                moveToFirstPosition(element);
+                return;
+            }
+            element = element.nextElement;
+        }
+
+        element = first;
+        first = new Entry(key, value, null, element);
+        element.previousElement = first;
+        size++;
+
+        if (size > capacity) {
+            deleteLastElement();
+        }
     }
 
 
+    private void moveToFirstPosition(Entry element) {
+        if (element.nextElement == null) {
+            moveToFirstPositionLastElement(element);
+            return;
+        }
+
+        if (element.previousElement == null) {
+            return;
+        }
+
+        element.previousElement.nextElement = element.nextElement;
+        element.nextElement.previousElement = element.previousElement;
+
+        first.previousElement = element;
+        element.nextElement = first;
+        element.previousElement = null;
+        first = element;
+
+    }
+
+
+    private void moveToFirstPositionLastElement(Entry element) {
+        element.previousElement.nextElement = null;
+        element.previousElement = null;
+        element.nextElement = first;
+        first = element;
+
+    }
+
+
+    private void deleteLastElement() {
+        element = first;
+
+        for (int i = 0; i < size; i++) {
+            if (element.nextElement == null) {
+                element = element.previousElement;
+                element.nextElement = null;
+                size--;
+            }
+            element = element.nextElement;
+        }
+    }
+
+
+
+    private class Entry {
+        private int key;
+        private int value;
+        private Entry previousElement;
+        private Entry nextElement;
+
+        public Entry(int key, int value, Entry previousElement, Entry nextElement) {
+            this.key = key;
+            this.value = value;
+            this.previousElement = previousElement;
+            this.nextElement = nextElement;
+        }
+    }
 }
-
-
-
-
-
-
-
-
-
-
-
